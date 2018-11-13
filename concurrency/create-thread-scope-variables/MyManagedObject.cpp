@@ -1,0 +1,2 @@
+#include "MyManagedObject.h"
+
