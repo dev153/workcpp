@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
+set(CMAKE_BUILD_TYPE Debug)
 project(create-thread-scope-variables)
-message(${CMAKE_CURRENT_SOURCE_DIR})
 add_executable(create_thread_scope_vars MyManagedObject.cpp
                                         CreateThreadScopeVars.cpp)
 set_property(TARGET create_thread_scope_vars PROPERTY CXX_STANDARD 17)
