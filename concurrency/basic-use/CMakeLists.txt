@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.0)
+project(basic-use)
+add_executable(basic_use basic_use.cpp)
+set_property(TARGET basic_use PROPERTY CXX_STANDARD 17)
+target_link_libraries(basic_use pthread)
