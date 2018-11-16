@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.0)
+set(CMAKE_BUILD_TYPE Debug)
+set(PROJECT_TARGET_NAME mutex_use)
+project(mutex-use)
+add_executable(${PROJECT_TARGET_NAME} mutex_use.cpp)
+target_link_libraries(${PROJECT_TARGET_NAME} pthread)
