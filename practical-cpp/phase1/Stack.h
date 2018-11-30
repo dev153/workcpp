@@ -1,8 +1,24 @@
 #pragma once
 
+#include "Publisher.h"
+
 #include <memory>
 #include <string>
 #include <vector>
+
+class StackEventData : public EventData {
+public:
+    enum class ErrorConditions { Empty, TooFewArguments };
+    StackEventData(ErrorConditions err) : m_err(err) {}
+
+    static const char * Message(ErrorConditions ec);
+    const char* messsage() const;
+    ErrorConditions error() const {
+        return m_err;
+    }
+private:
+    ErrorConditions m_err;
+};
 
 class Stack {
 private:

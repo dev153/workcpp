@@ -9,6 +9,35 @@ using std::make_unique;
 using std::string;
 using std::vector;
 
+//=============================================================================
+//
+//  StackEventData class implementation.
+//
+//=============================================================================
+
+
+const char *StackEventData::Message(StackEventData::ErrorConditions ec) {
+    switch(ec) {
+    case ErrorConditions::Empty:
+        return "Attempting to pop an empty stack.";
+    case ErrorConditions::TooFewArguments:
+        return "Need at least two stack elements to swap top.";
+    default:
+        return "Unknown error.";
+    };
+}
+
+const char *StackEventData::messsage() const
+{
+    return Message(m_err);
+}
+
+//=============================================================================
+//
+//  StackImpl class declaration.
+//
+//=============================================================================
+
 class Stack::StackImpl  {
 public:
     explicit StackImpl();
@@ -154,5 +183,6 @@ size_t Stack::StackImpl::size() const {
 void Stack::StackImpl::clear() {
     m_stack.clear();
 }
+
 
 
