@@ -1,0 +1,20 @@
+cmake_minimum_required(VERSION 3.0)
+
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+    find_package(Boost 1.68.0 REQUIRED EXACT COMPONENTS filesystem)
+    if(${Boost_FOUND} EQUAL 1)
+        message("${Boost_INCLUDE_DIRS}")
+        message("${Boost_LIBRARY_DIRS}")
+        include_directories(${Boost_INCLUDE_DIRS})
+        link_directories(${Boost_LIBRARY_DIRS})
+
+        set(PROJECT_NAME "phase1")
+        project(${PROJECT_NAME})
+        add_executable(${PROJECT_NAME} main.cpp)
+        set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
+        target_link_libraries(${PROJECT_NAME} pthread Boost::filesystem)
+        
+    endif()
+elseif()
+    message("TODO: When the operating system is Windows or MacOS.")
+endif()

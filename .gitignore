@@ -1,3 +1,4 @@
 **/build*
 # File generate when the project is configured from QtCreator.
 **/CMakeLists.txt.user
+**/.vscode
