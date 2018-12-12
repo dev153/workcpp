@@ -9,6 +9,9 @@ using std::make_unique;
 using std::string;
 using std::vector;
 
+const string Stack::StackChanged = "stackChanged";
+const string Stack::StackError = "error";
+
 //=============================================================================
 //
 //  StackEventData class implementation.
@@ -98,21 +101,13 @@ void Stack::clear() const {
 }
 
 Stack::Stack() : m_pimpl(make_unique<StackImpl>()){
+    registerEvent(StackChanged);
+    registerEvent(StackError);
 }
 
 Stack::~Stack() {
 
 }
-
-//public:
-//    static Stack& Intance();
-//    void push(double);
-//    double pop();
-//    void getElements(int, std::vector<double>&) const;
-//    void swapTop();
-//private:
-//    Stack();
-//    ~Stack() {}
 
 //=============================================================================
 //

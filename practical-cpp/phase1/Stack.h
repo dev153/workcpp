@@ -20,7 +20,7 @@ private:
     ErrorConditions m_err;
 };
 
-class Stack {
+class Stack : public Publisher {
 private:
     class StackImpl;
 public:
@@ -33,6 +33,10 @@ public:
     // these are just needed for testing
     size_t size() const;
     void clear() const;
+
+    static const std::string StackChanged;
+    static const std::string StackError;
+
 private:
     Stack();
     ~Stack();

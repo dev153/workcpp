@@ -9,6 +9,7 @@
 using std::make_pair;
 using std::make_unique;
 using std::ostringstream;
+using std::set;
 using std::shared_ptr;
 using std::string;
 using std::unique_ptr;
@@ -27,10 +28,14 @@ public:
 
     Events::const_iterator findCheckedEvent(const string& eventName) const;
     Events::iterator findCheckedEvent(const string& eventName);
+
+    void registerEvent(const std::string& eventName);
+    void registerEvents(const std::vector<std::string>& eventNames);
+    set<string> listEvents() const;
+    set<string> listEventObservers(const string& eventName) const;
 private:
     Events m_events;
 };
-
 
 //=============================================================================
 //
@@ -42,7 +47,10 @@ Publisher::Publisher()
     : m_publisherImpl(make_unique<PublisherImpl>()){
 }
 Publisher::~Publisher() {
-
+    // std::unique_ptr requires a definition of the destructor instead
+    // of using the default because the destructor must appear in a scope
+    // in which the complete definition of the template argument for
+    // std::unique_ptr is known
 }
 void Publisher::attach(const std::string &eventName, std::unique_ptr<Observer> observer) {
     m_publisherImpl->attach(eventName,std::move(observer));
@@ -54,6 +62,20 @@ std::unique_ptr<Observer> Publisher::detach(const std::string &eventName, const 
 void Publisher::raise(const std::string &eventName, std::shared_ptr<EventData> eventData) const {
     m_publisherImpl->notify(eventName,eventData);
 }
+void Publisher::registerEvent(const std::string& eventName) {
+    m_publisherImpl->registerEvent(eventName);
+    return;
+}
+void Publisher::registerEvents(const std::vector<std::string>& eventNames) {
+    m_publisherImpl->registerEvents(eventNames);
+    return;
+}
+set<string> Publisher::listEvents() const {
+    return m_publisherImpl->listEvents();
+}
+set<string> Publisher::listEventObservers(const string& eventName) const {
+    return m_publisherImpl->listEventObservers(eventName);
+}
 
 //=============================================================================
 //
@@ -61,14 +83,9 @@ void Publisher::raise(const std::string &eventName, std::shared_ptr<EventData> e
 //
 //=============================================================================
 
-
-
-
 Publisher::PublisherImpl::PublisherImpl() {
 }
-Publisher::PublisherImpl::~PublisherImpl()
-{
-
+Publisher::PublisherImpl::~PublisherImpl() {
 }
 void Publisher::PublisherImpl::attach(const std::string &eventName, std::unique_ptr<Observer> observer) {
     // [1] Find the observers list that corresponds to the event name.
@@ -137,4 +154,46 @@ Publisher::PublisherImpl::Events::const_iterator Publisher::PublisherImpl::findC
         throw Exception{oss.str()};
     }
     return eventIt;
+}
+void Publisher::PublisherImpl::registerEvent(const std::string& eventName) {
+    auto it = m_events.find(eventName);
+    if ( it == m_events.end() ) {
+        throw Exception{"Event already registered"};
+    }
+    m_events[eventName] = ObserversList{};
+}
+void Publisher::PublisherImpl::registerEvents(const std::vector<std::string>& eventNames) {
+    for ( auto eventName : eventNames ) {
+        registerEvent(eventName);
+    }
+}
+set<string> Publisher::PublisherImpl::listEvents() const {
+    set<string> events;
+    for ( const auto & event : m_events  ) {
+        events.insert(event.first);
+    }
+    return events;
+}
+set<string> Publisher::PublisherImpl::listEventObservers(const string& eventName) const {
+    // Find the observers list attached for the specific event.
+    // If not found an exception will be thrown.
+    auto it = findCheckedEvent(eventName);
+
+    set<string> observersNames;
+    const ObserversList & observersList = it->second;
+    for ( const auto & observerPair : observersList ) {
+         observersNames.insert(observerPair.first);
+    }
+    return observersNames;
+}
+
+//=============================================================================
+//
+//  EventData class implementation.
+//
+//=============================================================================
+
+EventData::~EventData()
+{
+
 }
