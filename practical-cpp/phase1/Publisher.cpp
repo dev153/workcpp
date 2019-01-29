@@ -157,7 +157,7 @@ Publisher::PublisherImpl::Events::const_iterator Publisher::PublisherImpl::findC
 }
 void Publisher::PublisherImpl::registerEvent(const std::string& eventName) {
     auto it = m_events.find(eventName);
-    if ( it == m_events.end() ) {
+    if ( it != m_events.end() ) {
         throw Exception{"Event already registered"};
     }
     m_events[eventName] = ObserversList{};
