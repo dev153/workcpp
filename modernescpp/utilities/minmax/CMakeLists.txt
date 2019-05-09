@@ -1,0 +1,11 @@
+cmake_minimum_required(VERSION 3.0)
+
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+    set(CMAKE_GENERATOR "Unix Makefiles")
+    set(PROJECT_NAME "minmax")
+    project(${PROJECT_NAME})
+    add_executable(${PROJECT_NAME} main.cpp)
+    set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
+elseif()
+    message("TODO: When the operating system is Windows or MacOS.")
+endif()
